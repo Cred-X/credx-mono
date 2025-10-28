@@ -1,0 +1,5 @@
+REDIS_URL="type your redis url here"
+REDIS_TOKEN="type your redis token here"
+FRONTEND_URL="type your frontend url here"
+SOLANA_RPC_URL="type your solana rpc url here"
+SOLANA_API_KEY="type your solana rpc provider api key here"
