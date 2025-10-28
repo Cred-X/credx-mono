@@ -8,6 +8,7 @@ import { hono } from "./lib/hono";
 const app = hono();
 
 app.use(logger());
+app.use(prettyJSON());
 app.use("*", async (ctx, next) => {
 	const corsMiddleware = cors({
 		credentials: true,
@@ -17,7 +18,6 @@ app.use("*", async (ctx, next) => {
 	});
 	return corsMiddleware(ctx, next);
 });
-app.use(prettyJSON());
 
 app.route("/api", apiRoutes);
 
