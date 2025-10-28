@@ -8,14 +8,14 @@ import { hono } from "./lib/hono";
 const app = hono();
 
 app.use(logger());
-app.use("*", async (c, next) => {
+app.use("*", async (ctx, next) => {
 	const corsMiddleware = cors({
 		credentials: true,
-		origin: ["http://localhost:3000"],
+		origin: ["http://localhost:3000", ctx.env.FRONTEND_URL],
 		allowHeaders: ["Content-Type", "Authorization"],
 		allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 	});
-	return corsMiddleware(c, next);
+	return corsMiddleware(ctx, next);
 });
 app.use(prettyJSON());
 
