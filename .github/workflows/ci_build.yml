@@ -26,5 +26,24 @@ jobs:
       - name: install dependencies
         run: bun install
 
+      - name: generate wrangler.jsonc
+        run: |
+          cat > apps/server/wrangler.jsonc <<EOF
+          {
+          "name": "untangled-be",
+            "account_id": "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}",
+            "main": "src/index.ts",
+            "compatibility_date": "$(date +%Y-%m-%d)",
+            "compatibility_flags": ["nodejs_compat"],
+            "vars": {
+              "FRONTEND_URL": "${{ vars.FRONTEND_URL }}",
+              "REDIS_URL": "${{ secrets.REDIS_URL }}",
+              "REDIS_TOKEN": "${{ secrets.REDIS_TOKEN }}",
+              "SOLANA_RPC_URL": "${{ secrets.SOLANA_RPC_URL }}",
+              "SOLANA_API_KEY": "${{ secrets.SOLANA_API_KEY }}" 
+            }
+          }
+          EOF
+
       - name: Build all packages
         run: bun run build
