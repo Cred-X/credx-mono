@@ -4,10 +4,10 @@
 	"private": true,
 	"scripts": {
 		"dev": "next dev --turbopack",
-		"build": "next build --turbopack",
+		"build": "next build",
 		"start": "next start",
 		"lint": "eslint",
-		"pages:build": "bunx @cloudflare/next-on-pages",
+		"pages:build": "npx @cloudflare/next-on-pages",
 		"deploy": "bun pages:build && wrangler pages deploy"
 	},
 	"dependencies": {
