@@ -3,8 +3,7 @@ import { ComputeSchema } from "../validator/compute.validator";
 import { WalletScoreResponse } from "@/types/wallet";
 
 class ApiClient {
-	private readonly baseUrl: string =
-		process.env.NEXT_PUBLIC_API_URI || "http://localhost:3000";
+	private readonly baseUrl: string = process.env.NEXT_PUBLIC_API_URI!;
 	private _axios: AxiosInstance;
 
 	constructor() {
