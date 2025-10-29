@@ -8,7 +8,7 @@ class ApiClient {
 
 	constructor() {
 		this._axios = axios.create({
-			baseURL: this.baseUrl,
+			baseURL: "https://credx-api.adityatote.tech",
 			headers: {
 				"Content-Type": "application/json",
 			},
