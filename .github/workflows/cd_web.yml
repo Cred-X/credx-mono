@@ -40,6 +40,7 @@ jobs:
       - name: create .env file
         run: |
           echo "NEXT_PUBLIC_API_URL=${{ vars.BACKEND_URL }}" > .env
+          cat .env
 
       - name: deploy to cloudflare workers
         run: |

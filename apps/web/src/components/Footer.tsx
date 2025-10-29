@@ -17,7 +17,7 @@ export function Footer() {
 					<p className="text-sm text-muted-foreground">
 						© 2025{" "}
 						<span className="text-foreground font-medium">
-							Credora Protocol
+							CredX Protocol
 						</span>
 						. Built on Solana.
 					</p>
