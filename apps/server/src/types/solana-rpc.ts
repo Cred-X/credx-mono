@@ -1,7 +1,7 @@
 export enum methodEnum {
-	"getTransaction",
-	"getSignaturesForAddress",
-	"getAssetsByOwner",
+	getTransaction = "getTransaction",
+	getSignaturesForAddress = "getSignaturesForAddress",
+	getAssetsByOwner = "getAssetsByOwner",
 }
 
 export interface IRpcPayload<T> {
@@ -19,7 +19,7 @@ export type ISignatureParams = [
 		limit?: number;
 		before?: string | null;
 		commitment?: "finalized" | "confirmed";
-	}
+	},
 ];
 
 export interface OwnerAssetsParams {

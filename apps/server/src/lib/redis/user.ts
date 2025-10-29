@@ -10,7 +10,7 @@ export interface UserScoreData {
 export class UserStore {
 	private static instance: UserStore;
 	private redis: RedisClient;
-	private readonly CACHE_EXPIRY = 21600; // 6 hours in seconds
+	private readonly CACHE_EXPIRY = 300; // 5 min in seconds
 	private readonly SCORE_PREFIX = "score:";
 
 	private constructor(redisClient: RedisClient) {

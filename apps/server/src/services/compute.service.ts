@@ -20,7 +20,7 @@ export class ComputeService {
 			url: ctx.env.REDIS_URL,
 			token: ctx.env.REDIS_TOKEN,
 		}) as RedisClient;
-
+		
 		const score = await compute_score(solana, redis, walletAddress);
 
 		if (!score) {

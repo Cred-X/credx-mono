@@ -35,6 +35,7 @@ const SCORE_WEIGHTS = {
 } as const;
 
 const TRANSACTION_MULTIPLIER = 23;
+
 const AGE_FIRST_YEAR_MULTIPLIER = 40;
 const AGE_AFTER_YEAR_BASE = 80;
 const AGE_AFTER_YEAR_MULTIPLIER = 20;
@@ -50,13 +51,14 @@ const MAX_SCORE = 100;
 const MIN_SCORE = 0;
 
 /**
- * Clamps a score value between MIN_SCORE and MAX_SCORE.
+ * Clamps a score value between MIN_SCORE and MAX_SCORE and rounds to 2 decimal places.
  * @param score The score to clamp.
- * @returns The clamped score (0-100).
+ * @returns The clamped score (0-100) rounded to 2 decimal places.
  */
 const clampScore = (score: number): number => {
 	if (!Number.isFinite(score)) return MIN_SCORE;
-	return Math.round(Math.max(MIN_SCORE, Math.min(MAX_SCORE, score)));
+	const clamped = Math.max(MIN_SCORE, Math.min(MAX_SCORE, score));
+	return Math.round(clamped * 100) / 100;
 };
 
 /**
@@ -98,23 +100,31 @@ const get_score_by_age = async (
 	walletAddress: string
 ): Promise<number> => {
 	try {
-		const { result } = await solana.get_first_transaction_signature(
-			walletAddress
-		);
+		const { result } =
+			await solana.get_first_transaction_signature(walletAddress);
 
-		const blockTime = result?.[0]?.blockTime;
-		if (!blockTime || !Number.isFinite(blockTime)) return MIN_SCORE;
+		if (!result || result.length === 0) {
+			return MIN_SCORE;
+		}
+
+		const blockTime = result[0]?.blockTime;
+
+		if (!blockTime || !Number.isFinite(blockTime)) {
+			return MIN_SCORE;
+		}
 
 		const currentTime = Math.floor(Date.now() / 1000);
 		const ageInDays = (currentTime - blockTime) / SECONDS_IN_DAY;
 
-		if (ageInDays <= 0) return MIN_SCORE;
+		if (ageInDays <= 0) {
+			return MIN_SCORE;
+		}
 
 		const score =
 			ageInDays < DAYS_IN_YEAR
 				? Math.log10(ageInDays + 1) * AGE_FIRST_YEAR_MULTIPLIER
 				: AGE_AFTER_YEAR_BASE +
-				  Math.log10(ageInDays / DAYS_IN_YEAR + 1) * AGE_AFTER_YEAR_MULTIPLIER;
+					Math.log10(ageInDays / DAYS_IN_YEAR + 1) * AGE_AFTER_YEAR_MULTIPLIER;
 
 		return clampScore(score);
 	} catch (error) {
@@ -146,8 +156,8 @@ const get_score_by_assets = async (
 			assetCount === 1
 				? ASSET_MIN_SCORE
 				: assetCount <= ASSET_LOW_THRESHOLD
-				? ASSET_MIN_SCORE + Math.sqrt(assetCount) * ASSET_LOW_MULTIPLIER
-				: Math.sqrt(assetCount) * ASSET_MULTIPLIER;
+					? ASSET_MIN_SCORE + Math.sqrt(assetCount) * ASSET_LOW_MULTIPLIER
+					: Math.sqrt(assetCount) * ASSET_MULTIPLIER;
 
 		return clampScore(score);
 	} catch (error) {
@@ -198,7 +208,7 @@ export const compute_score = async (
 			ageScore * SCORE_WEIGHTS.AGE +
 			assetsScore * SCORE_WEIGHTS.ASSETS;
 
-		const roundedFinalScore = Math.round(finalScore);
+		const roundedFinalScore = Math.round(finalScore * 100) / 100;
 
 		await userStore.setUserScore(walletAddress, {
 			tnx_score: txScore,
